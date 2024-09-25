@@ -19,6 +19,11 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Fetch all history including tags
+
+    - name: List tags
+      run: git tag  # Debugging step to list available tags
 
     - name: Install dependencies (Linux only)
       if: matrix.os == 'ubuntu-latest'
