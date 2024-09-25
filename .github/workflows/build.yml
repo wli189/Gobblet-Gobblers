@@ -62,7 +62,7 @@ jobs:
       id: create_release
       uses: softprops/action-gh-release@v1
       with:
-        tag: v${{ env.VERSION }}  # Use the version from the VERSION file
+        tag: v${{ env.VERSION }}  # Ensure the tag is set correctly
         files: |
           build/release/Gobblet-Gobblers
           build/release/Gobblet-Gobblers.exe
@@ -73,7 +73,6 @@ jobs:
       run: |
         IFS='.' read -r major minor build <<< "${{ env.VERSION }}"
         new_build=$((build + 1))
-        echo "${major}.${minor}.${new_build}" > VERSION
-        echo "New version: ${major}.${minor}.${new_build}"
-      # Note: You may want to save the new version back to the repo
-      # This will require a separate commit if you want to persist the new version
+        new_version="${major}.${minor}.${new_build}"
+        echo "${new_version}" > VERSION
+        echo "New version: ${new_version}"
