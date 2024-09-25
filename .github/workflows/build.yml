@@ -43,20 +43,16 @@ jobs:
         g++ -o build/release/Gobblet-Gobblers.exe src/*.cpp -O3
       shell: pwsh
 
-    - name: Upload Release Binaries (Linux)
-      if: matrix.os == 'ubuntu-latest'
-      uses: actions/upload-artifact@v4
-      with:
-        name: Gobblet-Gobblers-linux
-        path: build/release/Gobblet-Gobblers
+  release:
+    needs: build  # Wait for the build job to finish
+    runs-on: ubuntu-latest  # Only run the release job on Linux
 
-    - name: Upload Release Binaries (Windows)
-      if: matrix.os == 'windows-latest'
-      uses: actions/upload-artifact@v4
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
       with:
-        name: Gobblet-Gobblers-windows
-        path: build/release/Gobblet-Gobblers.exe
-        
+        fetch-depth: 0  # Fetch all history including tags
+
     - name: Get latest tag
       id: get_latest_tag
       run: |
