@@ -38,46 +38,26 @@ jobs:
         g++ -o build/release/Gobblet-Gobblers.exe src/*.cpp -O3
       shell: pwsh
 
-    - name: Read current version
-      id: read_version
-      run: |
-        VERSION=$(cat VERSION.txt)
-        echo "Current version: $VERSION"
-        echo "VERSION=$VERSION" >> $GITHUB_ENV
+    - name: Upload Release Binaries (Linux)
+      if: matrix.os == 'ubuntu-latest'
+      uses: actions/upload-artifact@v4
+      with:
+        name: Gobblet-Gobblers-linux
+        path: build/release/Gobblet-Gobblers
 
-    - name: Create Tag
-      id: create_tag
-      run: |
-        TAG_NAME="${{ env.VERSION }}"  # Use the version read from the file
-        git tag $TAG_NAME
-        git push origin $TAG_NAME
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Upload Release Binaries (Windows)
+      if: matrix.os == 'windows-latest'
+      uses: actions/upload-artifact@v4
+      with:
+        name: Gobblet-Gobblers-windows
+        path: build/release/Gobblet-Gobblers.exe
 
     - name: Create Release
       uses: softprops/action-gh-release@v1
       with:
-        tag: ${{ env.VERSION }}  # Use the tag created above
-        name: Gobblet-Gobblers Release
-        body: |
-          Release of Gobblet-Gobblers binaries for Linux and Windows.
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Upload Release Binaries (Linux)
-      if: matrix.os == 'ubuntu-latest'
-      uses: softprops/action-gh-release@v1
-      with:
-        tag: ${{ env.VERSION }}  # Ensure this matches the release created above
-        files: build/release/Gobblet-Gobblers
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Upload Release Binaries (Windows)
-      if: matrix.os == 'windows-latest'
-      uses: softprops/action-gh-release@v1
-      with:
-        tag: ${{ env.VERSION }}  # Ensure this matches the release created above
-        files: build/release/Gobblet-Gobblers.exe
+        tag: v${{ github.run_number }}  # You can change the versioning strategy here
+        files: |
+          build/release/Gobblet-Gobblers
+          build/release/Gobblet-Gobblers.exe
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
