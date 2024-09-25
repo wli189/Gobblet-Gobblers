@@ -55,15 +55,13 @@ jobs:
     - name: Get latest tag
       id: get_latest_tag
       run: |
-        try {
-          $TAG = git describe --tags --abbrev=0 -ErrorAction Stop
-        } catch {
+        $TAG = git describe --tags --abbrev=0 2>$null
+        if (-not $TAG) {
           $TAG = "0.0.0"
         }
         Write-Host "Latest tag: $TAG"
         echo "tag=$TAG" >> $GITHUB_ENV
       shell: pwsh
-
 
     - name: Increment version
       id: increment_version
