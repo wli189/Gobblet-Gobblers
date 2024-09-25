@@ -18,7 +18,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3  # Keep as is
+      uses: actions/checkout@v3
 
     - name: Install dependencies (Linux only)
       if: matrix.os == 'ubuntu-latest'
@@ -38,16 +38,30 @@ jobs:
         g++ -o build/release/Gobblet-Gobblers.exe src/*.cpp -O3
       shell: pwsh
 
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag: ${{ github.ref }}  # Use the current tag or branch
+        name: Gobblet-Gobblers Release
+        body: |
+          Release of Gobblet-Gobblers binaries for Linux and Windows.
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Upload Release Binaries (Linux)
       if: matrix.os == 'ubuntu-latest'
-      uses: actions/upload-artifact@v4
+      uses: softprops/action-gh-release@v1
       with:
-        name: Gobblet-Gobblers-linux
-        path: build/release/Gobblet-Gobblers
+        tag: ${{ github.ref }}  # Ensure this matches the release created above
+        files: build/release/Gobblet-Gobblers
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Upload Release Binaries (Windows)
       if: matrix.os == 'windows-latest'
-      uses: actions/upload-artifact@v4
+      uses: softprops/action-gh-release@v1
       with:
-        name: Gobblet-Gobblers-windows
-        path: build/release/Gobblet-Gobblers.exe
+        tag: ${{ github.ref }}  # Ensure this matches the release created above
+        files: build/release/Gobblet-Gobblers.exe
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
