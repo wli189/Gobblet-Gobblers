@@ -94,7 +94,6 @@ jobs:
         fi
       shell: bash
 
-
     - name: Create Release
       id: create_release
       uses: softprops/action-gh-release@v1
@@ -103,7 +102,7 @@ jobs:
         name: Release ${{ env.new_version }}  # Name the release with the new version
         body: |
           Changes made in this release:
-          ${{ env.body }}  # Include formatted commit messages
+          ${{ env.body }}
       env:
         GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}  # Ensure you're using the correct token
 
