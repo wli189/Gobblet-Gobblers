@@ -82,7 +82,7 @@ jobs:
           Changes made in this release:
           - Built binaries for both Linux and Windows.
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
 
     - name: Upload Release Artifacts
       uses: softprops/action-gh-release@v1
