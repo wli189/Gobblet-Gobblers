@@ -5,6 +5,7 @@
     The game is played on a 3x3 board.
     Each player has six pieces. Three sizes: small, medium, and large, with two pieces per size.
     The players take turns placing their pieces on the board, with the goal of getting three pieces of the same color in a row, column, or diagonal.
+    HAVE FUN!!
 */
 #include <iostream>
 
