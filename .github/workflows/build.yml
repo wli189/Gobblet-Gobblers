@@ -18,9 +18,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
-      with:
-        node-version: '20'  # Explicitly specify Node.js version
+      uses: actions/checkout@v3  # Keep as is
 
     - name: Install dependencies (Linux only)
       if: matrix.os == 'ubuntu-latest'
