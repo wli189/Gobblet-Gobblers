@@ -79,6 +79,17 @@ jobs:
         echo "new_version=$NEW_VERSION" >> $GITHUB_ENV
       shell: bash
 
+      - name: Get commit messages
+      id: get_commit_messages
+      run: |
+        if git rev-parse "${{ env.tag }}" >/dev/null 2>&1; then
+          COMMITS=$(git log ${{ env.tag }}..HEAD --pretty=format:"- %s" | tr '\n' ', ')
+        else
+          COMMITS="No previous commits found."
+        fi
+        echo "Commit messages: $COMMITS"
+        echo "body=$COMMITS" >> $GITHUB_ENV
+
     - name: Create Release
       id: create_release
       uses: softprops/action-gh-release@v1
@@ -87,7 +98,7 @@ jobs:
         name: Release ${{ env.new_version }}  # Name the release with the new version
         body: |
           Changes made in this release:
-          - Built binaries for both Linux and Windows.
+          ${{ env.body }}  # Include formatted commit messages
       env:
         GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}  # Ensure you're using the correct token
 
