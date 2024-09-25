@@ -114,11 +114,13 @@ jobs:
       id: create_release
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: ${{ env.new_version }}  # Ensure you're using the correct new version as the tag
-        name: Release ${{ env.new_version }}  # Name the release with the new version
-        body: ${{ env.body }}  # Pass the formatted commit messages as the release body
+        tag_name: ${{ env.new_version }}  # Ensure this is populated correctly
+        name: Release ${{ env.new_version }}
+        body: |
+          Changes made in this release:
+          ${{ env.body }}  # Include formatted commit messages
       env:
-        GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}  # Use the correct GitHub token
+        GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}  # Ensure correct permissions
 
     - name: Upload Release Artifacts
       uses: softprops/action-gh-release@v1
