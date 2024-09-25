@@ -51,7 +51,7 @@ jobs:
       with:
         name: Gobblet-Gobblers-windows
         path: build/release/Gobblet-Gobblers.exe
-
+        
     - name: Get latest tag
       id: get_latest_tag
       run: |
@@ -59,13 +59,7 @@ jobs:
         echo "Latest tag: $TAG"
         echo "tag=$TAG" >> $GITHUB_ENV
       shell: bash
-
-    - name: Check Git Status
-      run: |
-        git status
-        git log --oneline --decorate -n 10
-      shell: bash
-
+    
     - name: Increment version
       run: |
         IFS='.' read -r -a parts <<< "${{ env.tag }}"
@@ -87,13 +81,6 @@ jobs:
         name: Release ${{ env.new_version }}
         body: |
           # Changes made in this release:
-      env:
-        GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
-
-    - name: Create New Tag
-      run: |
-        git tag ${{ env.new_version }}
-        git push origin ${{ env.new_version }}
       env:
         GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
 
