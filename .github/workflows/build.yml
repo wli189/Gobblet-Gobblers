@@ -65,6 +65,12 @@ jobs:
         echo "tag=$TAG" >> $GITHUB_ENV
       shell: pwsh
 
+    - name: Check Git Status
+      run: |
+        git status
+        git log --oneline --decorate -n 10
+      shell: pwsh
+
     - name: Increment version
       id: increment_version
       run: |
