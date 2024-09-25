@@ -111,6 +111,7 @@ jobs:
       shell: bash
 
     - name: Create Release
+      if: matrix.os == 'ubuntu-latest'
       id: create_release
       uses: softprops/action-gh-release@v1
       with:
