@@ -102,11 +102,11 @@ jobs:
       id: get_commit_messages
       run: |
         if git rev-parse "${{ env.tag }}" >/dev/null 2>&1; then
-          COMMITS=$(git log ${{ env.tag }}..HEAD --pretty=format:"- %s")
+          COMMITS=$(git log ${{ env.tag }}..HEAD --pretty=format:"- %s" | tr '\n' ', ')
         else
           COMMITS="No previous commits found."
         fi
-        echo "Commit messages:\n$COMMITS"
+        echo "Commit messages: $COMMITS"
         echo "body=$COMMITS" >> $GITHUB_ENV
       shell: bash
 
