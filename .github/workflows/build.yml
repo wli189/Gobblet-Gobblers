@@ -90,6 +90,13 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
 
+    - name: Create New Tag
+      run: |
+        git tag ${{ env.new_version }}
+        git push origin ${{ env.new_version }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
+
     - name: Upload Release Artifacts
       uses: softprops/action-gh-release@v1
       with:
