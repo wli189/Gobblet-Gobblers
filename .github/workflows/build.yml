@@ -57,7 +57,7 @@ jobs:
       run: |
         TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "0.0.0")
         echo "Latest tag: $TAG"
-        echo "tag=$TAG" >> $GITHUB_ENV
+        echo "tag=${TAG#v}" >> $GITHUB_ENV  # Strip 'v' if you used 'v0.0.0' as your tag
       shell: bash
     
     - name: Increment version
