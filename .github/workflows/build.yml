@@ -52,27 +52,42 @@ jobs:
         name: Gobblet-Gobblers-windows
         path: build/release/Gobblet-Gobblers.exe
 
-    - name: Read Current Version
-      id: read_version
+    - name: Get latest tag
+      id: get_latest_tag
       run: |
-        VERSION=$(cat VERSION)
-        echo "VERSION=$VERSION" >> $GITHUB_ENV
+        TAG=$(git describe --tags --abbrev=0)
+        echo "Latest tag: $TAG"
+        echo "tag=$TAG" >> $GITHUB_ENV
+      continue-on-error: true
+
+    - name: Increment version
+      id: increment_version
+      run: |
+        if [ -z "${{ env.tag }}" ]; then
+          NEW_VERSION="1.0.0"
+        else
+          IFS='.' read -r -a parts <<< "${{ env.tag }}"
+          parts[2]=$((parts[2]+1)) # Increment patch version
+          NEW_VERSION="${parts[0]}.${parts[1]}.${parts[2]}"
+        fi
+        echo "New version: $NEW_VERSION"
+        echo "new_version=$NEW_VERSION" >> $GITHUB_ENV
 
     - name: Create Release
       id: create_release
       uses: softprops/action-gh-release@v1
       with:
-        tag: v${{ env.VERSION }}  # Ensure the tag is set correctly
-        files: |
-          build/release/Gobblet-Gobblers
-          build/release/Gobblet-Gobblers.exe
+        tag: ${{ env.new_version }}
+        name: Release ${{ env.new_version }}
+        body: |
+          Changes made in this release:
+          - Built binaries for both Linux and Windows.
       env:
-        GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Increment Version
-      run: |
-        IFS='.' read -r major minor build <<< "${{ env.VERSION }}"
-        new_build=$((build + 1))
-        new_version="${major}.${minor}.${new_build}"
-        echo "${new_version}" > VERSION
-        echo "New version: ${new_version}"
+    - name: Upload Release Artifacts
+      uses: softprops/action-gh-release@v1
+      with:
+        tag: ${{ env.new_version }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
