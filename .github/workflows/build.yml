@@ -18,7 +18,9 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3  # Updated to v3
+      uses: actions/checkout@v3
+      with:
+        node-version: '20'  # Explicitly specify Node.js version
 
     - name: Install dependencies (Linux only)
       if: matrix.os == 'ubuntu-latest'
@@ -38,14 +40,14 @@ jobs:
         g++ -o build/release/Gobblet-Gobblers.exe src/*.cpp -O3
       shell: pwsh
 
-    - name: Upload Release Binaries
+    - name: Upload Release Binaries (Linux)
       if: matrix.os == 'ubuntu-latest'
       uses: actions/upload-artifact@v4
       with:
         name: Gobblet-Gobblers-linux
         path: build/release/Gobblet-Gobblers
 
-    - name: Upload Release Binaries
+    - name: Upload Release Binaries (Windows)
       if: matrix.os == 'windows-latest'
       uses: actions/upload-artifact@v4
       with:
