@@ -66,9 +66,8 @@ jobs:
         git log --oneline --decorate -n 10
       shell: bash
 
-    - name: Increment version (Linux)
-      id: increment_version_linux
-      if: matrix.os == 'ubuntu-latest'
+    - name: Increment version (Linux and Windows)
+      id: increment_version
       run: |
         IFS='.' read -r -a parts <<< "${{ env.tag }}"
         if [ "${parts[0]}" == "0" ] && [ "${parts[1]}" == "0" ]; then
@@ -80,21 +79,6 @@ jobs:
         echo "New version: $NEW_VERSION"
         echo "new_version=$NEW_VERSION" >> $GITHUB_ENV
       shell: bash
-
-    - name: Increment version (Windows)
-      id: increment_version_windows
-      if: matrix.os == 'windows-latest'
-      run: |
-        $parts = "${{ env.tag }}".Split('.')
-        if ($parts[0] -eq "0" -and $parts[1] -eq "0") {
-          $NEW_VERSION = "1.0.0"
-        } else {
-          $parts[2] = [int]$parts[2] + 1 # Increment patch version
-          $NEW_VERSION = "$($parts[0]).$($parts[1]).$($parts[2])"
-        }
-        Write-Host "New version: $NEW_VERSION"
-        echo "new_version=$NEW_VERSION" >> $GITHUB_ENV
-      shell: pwsh
 
     - name: Create Release
       id: create_release
@@ -111,6 +95,6 @@ jobs:
     - name: Upload Release Artifacts
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: ${{ env.new_version }}  # Changed 'tag' to 'tag_name'
+        tag_name: ${{ env.new_version }}  # Ensure to specify the same tag
       env:
         GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
