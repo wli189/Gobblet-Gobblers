@@ -19,6 +19,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Fetch all history so we can get all tags
 
     - name: Install dependencies (Linux only)
       if: matrix.os == 'ubuntu-latest'
@@ -99,7 +101,11 @@ jobs:
     - name: Get commit messages
       id: get_commit_messages
       run: |
-        COMMITS=$(git log ${{ env.tag }}..HEAD --pretty=format:"- %s")
+        if git rev-parse "${{ env.tag }}" >/dev/null 2>&1; then
+          COMMITS=$(git log ${{ env.tag }}..HEAD --pretty=format:"- %s")
+        else
+          COMMITS="No previous commits found."
+        fi
         echo "Commit messages:\n$COMMITS"
         echo "body=$COMMITS" >> $GITHUB_ENV
       shell: bash
