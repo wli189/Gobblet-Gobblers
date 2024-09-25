@@ -123,6 +123,9 @@ jobs:
     - name: Upload Release Artifacts
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: ${{ env.new_version }}  # Changed 'tag' to 'tag_name'
+        tag_name: ${{ env.new_version }}  # Tag for the release
+        files: |
+          build/release/Gobblet-Gobblers
+          build/release/Gobblet-Gobblers.exe
       env:
         GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
