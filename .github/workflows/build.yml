@@ -66,8 +66,7 @@ jobs:
         git log --oneline --decorate -n 10
       shell: bash
 
-    - name: Increment version (Linux and Windows)
-      id: increment_version
+    - name: Increment version
       run: |
         IFS='.' read -r -a parts <<< "${{ env.tag }}"
         if [ "${parts[0]}" == "0" ] && [ "${parts[1]}" == "0" ]; then
@@ -95,6 +94,9 @@ jobs:
     - name: Upload Release Artifacts
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: ${{ env.new_version }}  # Ensure to specify the same tag
+        tag_name: ${{ env.new_version }}  # Specify the tag for which artifacts are uploaded
+        files: |
+          build/release/Gobblet-Gobblers
+          build/release/Gobblet-Gobblers.exe
       env:
         GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
