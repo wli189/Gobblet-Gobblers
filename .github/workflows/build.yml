@@ -79,37 +79,21 @@ jobs:
         echo "new_version=$NEW_VERSION" >> $GITHUB_ENV
       shell: bash
 
-    - name: Get Commit Messages
-      id: get_commit_messages
-      run: |
-        TAG=${{ env.tag }}
-        # Check if the tag exists
-        if git rev-parse "$TAG" >/dev/null 2>&1; then
-          COMMITS=$(git log --oneline "$TAG" ..HEAD | sed 's/^/* /')  # Get commits since the last tag and format them
-          echo "Commits: $COMMITS"
-          echo "body=$COMMITS" >> $GITHUB_ENV
-        else
-          echo "Tag $TAG does not exist. No commits to log."
-          echo "body=" >> $GITHUB_ENV  # Set body to empty
-        fi
-      shell: bash
-
     - name: Create Release
       id: create_release
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: ${{ env.new_version }}  # Use the new version as the tag
-        name: Release ${{ env.new_version }}  # Name the release with the new version
+        tag_name: ${{ env.new_version }}
+        name: Release ${{ env.new_version }}
         body: |
-          Changes made in this release:
-          ${{ env.body }}
+          # Changes made in this release:
       env:
-        GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}  # Ensure you're using the correct token
+        GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
 
     - name: Upload Release Artifacts
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: ${{ env.new_version }}  # Specify the tag for which artifacts are uploaded
+        tag_name: ${{ env.new_version }}
         files: |
           build/release/Gobblet-Gobblers
           build/release/Gobblet-Gobblers.exe
