@@ -79,16 +79,13 @@ jobs:
         echo "new_version=$NEW_VERSION" >> $GITHUB_ENV
       shell: bash
 
-      - name: Get commit messages
+    - name: Get Commit Messages
       id: get_commit_messages
       run: |
-        if git rev-parse "${{ env.tag }}" >/dev/null 2>&1; then
-          COMMITS=$(git log ${{ env.tag }}..HEAD --pretty=format:"- %s" | tr '\n' ', ')
-        else
-          COMMITS="No previous commits found."
-        fi
-        echo "Commit messages: $COMMITS"
+        COMMITS=$(git log --oneline ${{ env.tag }}..HEAD | sed 's/^/* /')  # Get commits since the last tag and format them
+        echo "Commits: $COMMITS"
         echo "body=$COMMITS" >> $GITHUB_ENV
+      shell: bash
 
     - name: Create Release
       id: create_release
