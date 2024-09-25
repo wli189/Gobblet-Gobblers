@@ -82,10 +82,18 @@ jobs:
     - name: Get Commit Messages
       id: get_commit_messages
       run: |
-        COMMITS=$(git log --oneline ${{ env.tag }}..HEAD | sed 's/^/* /')  # Get commits since the last tag and format them
-        echo "Commits: $COMMITS"
-        echo "body=$COMMITS" >> $GITHUB_ENV
+        TAG=${{ env.tag }}
+        # Check if the tag exists
+        if git rev-parse "$TAG" >/dev/null 2>&1; then
+          COMMITS=$(git log --oneline "$TAG" ..HEAD | sed 's/^/* /')  # Get commits since the last tag and format them
+          echo "Commits: $COMMITS"
+          echo "body=$COMMITS" >> $GITHUB_ENV
+        else
+          echo "Tag $TAG does not exist. No commits to log."
+          echo "body=" >> $GITHUB_ENV  # Set body to empty
+        fi
       shell: bash
+
 
     - name: Create Release
       id: create_release
