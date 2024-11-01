@@ -113,8 +113,8 @@ jobs:
       with:
         tag_name: ${{ env.new_version }}
         files: |
-          build/release/Gobblet-Gobblers#Gobblet-Gobblers-linux
-          build/release/Gobblet-Gobblers.exe#Gobblet-Gobblers-windows
+          build/release/Gobblet-Gobblers-linux
+          build/release/Gobblet-Gobblers-windows.exe
       env:
         GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
 
