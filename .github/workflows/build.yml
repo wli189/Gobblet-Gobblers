@@ -30,14 +30,14 @@ jobs:
       if: matrix.os == 'ubuntu-latest'
       run: |
         mkdir -p build/release
-        g++ -o build/release/Gobblet-Gobblers src/*.cpp -O3
+        g++ -o build/release/Gobblet-Gobblers-linux src/*.cpp -O3
       shell: bash
 
     - name: Build Release (Windows)
       if: matrix.os == 'windows-latest'
       run: |
         mkdir -p build/release
-        g++ -o build/release/Gobblet-Gobblers.exe src/*.cpp -O3
+        g++ -o build/release/Gobblet-Gobblers-windows.exe src/*.cpp -O3
       shell: pwsh
 
     - name: Upload Release Binaries (Linux)
@@ -45,14 +45,14 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: Gobblet-Gobblers-linux
-        path: build/release/Gobblet-Gobblers
+        path: build/release/Gobblet-Gobblers-linux
 
     - name: Upload Release Binaries (Windows)
       if: matrix.os == 'windows-latest'
       uses: actions/upload-artifact@v4
       with:
         name: Gobblet-Gobblers-windows
-        path: build/release/Gobblet-Gobblers.exe
+        path: build/release/Gobblet-Gobblers-windows.exe
 
   release:
     needs: build  # Wait for the build job to finish
